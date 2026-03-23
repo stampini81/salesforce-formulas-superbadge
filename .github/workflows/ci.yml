@@ -9,6 +9,9 @@ on:
       - main
   workflow_dispatch:
 
+env:
+  NPM_CONFIG_LEGACY_PEER_DEPS: "true"
+
 jobs:
   format:
     name: Format Check
@@ -32,13 +35,15 @@ jobs:
           node --version
           echo "NPM version:"
           npm --version
+          echo "Available npm scripts:"
+          node -e "const pkg=require('./package.json'); console.log(pkg.scripts)"
 
       - name: Install dependencies
         shell: bash
         run: |
           set -euxo pipefail
           echo "Installing dependencies with legacy peer deps enabled..."
-          npm ci --legacy-peer-deps
+          npm ci --legacy-peer-deps --loglevel verbose
 
       - name: Verify formatting
         shell: bash
@@ -56,6 +61,13 @@ jobs:
           ls -la
           echo "Package scripts:"
           cat package.json
+          echo "NPM log files:"
+          find "$HOME/.npm/_logs" -type f -maxdepth 1 2>/dev/null | sort || true
+          for logfile in "$HOME"/.npm/_logs/*; do
+            [ -f "$logfile" ] || continue
+            echo "===== $logfile ====="
+            cat "$logfile"
+          done
 
   test:
     name: Test Check
@@ -79,13 +91,15 @@ jobs:
           node --version
           echo "NPM version:"
           npm --version
+          echo "Available npm scripts:"
+          node -e "const pkg=require('./package.json'); console.log(pkg.scripts)"
 
       - name: Install dependencies
         shell: bash
         run: |
           set -euxo pipefail
           echo "Installing dependencies for test execution..."
-          npm ci --legacy-peer-deps
+          npm ci --legacy-peer-deps --loglevel verbose
 
       - name: Detect Jest test files
         id: detect_tests
@@ -107,7 +121,13 @@ jobs:
         run: |
           set -euxo pipefail
           echo "Running Jest tests with CI reporters..."
-          npm run test -- --ci
+          if npm ls jest-junit >/dev/null 2>&1; then
+            echo "jest-junit detected. Running with JUnit reporter."
+            npm run test -- --ci --runInBand --reporters=default --reporters=jest-junit
+          else
+            echo "jest-junit not installed. Running with default reporter only."
+            npm run test -- --ci --runInBand --reporters=default
+          fi
 
       - name: Skip test execution
         if: steps.detect_tests.outputs.has_tests != 'true'
@@ -124,6 +144,13 @@ jobs:
           ls -la
           echo "Detected test files:"
           find force-app -type f \( -name "*.test.js" -o -name "*.spec.js" \) | sort || true
+          echo "NPM log files:"
+          find "$HOME/.npm/_logs" -type f -maxdepth 1 2>/dev/null | sort || true
+          for logfile in "$HOME"/.npm/_logs/*; do
+            [ -f "$logfile" ] || continue
+            echo "===== $logfile ====="
+            cat "$logfile"
+          done
 
   validate:
     name: Metadata Validation
