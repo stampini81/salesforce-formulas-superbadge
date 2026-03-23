@@ -38,6 +38,15 @@ jobs:
           echo "Available npm scripts:"
           node -e "const pkg=require('./package.json'); console.log(pkg.scripts)"
 
+      - name: Print package and Prettier config
+        shell: bash
+        run: |
+          set -euxo pipefail
+          echo "package.json"
+          cat package.json
+          echo ".prettierrc"
+          cat .prettierrc
+
       - name: Install dependencies
         shell: bash
         run: |
@@ -54,8 +63,8 @@ jobs:
         shell: bash
         run: |
           set -euxo pipefail
-          echo "Running Prettier verification..."
-          npm run prettier:verify
+          echo "Running explicit format check..."
+          npm run format
 
       - name: Debug format failure
         if: failure()
@@ -66,6 +75,10 @@ jobs:
           ls -la
           echo "Package scripts:"
           cat package.json
+          echo "Prettier config:"
+          cat .prettierrc
+          echo "Files failing Prettier check:"
+          npx prettier --check "**/*.{cls,cmp,component,css,html,js,json,md,page,trigger,xml,yaml,yml}" || true
           echo "NPM log files:"
           find "$HOME/.npm/_logs" -type f -maxdepth 1 2>/dev/null | sort || true
           for logfile in "$HOME"/.npm/_logs/*; do
