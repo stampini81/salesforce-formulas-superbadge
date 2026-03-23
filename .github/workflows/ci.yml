@@ -48,8 +48,8 @@ jobs:
         shell: bash
         run: |
           set -euxo pipefail
-          echo "Installing dependencies with legacy peer deps enabled and optional dependencies omitted..."
-          npm ci --legacy-peer-deps --omit=optional --loglevel verbose
+          echo "Installing dependencies with retry support..."
+          npm ci --legacy-peer-deps --omit=optional --loglevel verbose || (sleep 10 && npm ci --legacy-peer-deps --omit=optional --loglevel verbose)
 
       - name: Verify formatting
         shell: bash
@@ -110,8 +110,8 @@ jobs:
         shell: bash
         run: |
           set -euxo pipefail
-          echo "Installing dependencies for test execution with optional dependencies omitted..."
-          npm ci --legacy-peer-deps --omit=optional --loglevel verbose
+          echo "Installing dependencies for test execution with retry support..."
+          npm ci --legacy-peer-deps --omit=optional --loglevel verbose || (sleep 10 && npm ci --legacy-peer-deps --omit=optional --loglevel verbose)
 
       - name: Detect Jest test files
         id: detect_tests
