@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Displays the amount from the related opportunity on the asset record for service decision-making.</description>
+    <externalId>false</externalId>
+    <fullName>Opportunity_Value__c</fullName>
+    <formula>Opportunity__r.Amount</formula>
+    <formulaTreatBlanksAs>BlankAsBlank</formulaTreatBlanksAs>
+    <inlineHelpText>Shows the exact amount from the related opportunity without requiring access to the Opportunity object.</inlineHelpText>
+    <label>Opportunity Value</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <type>Currency</type>
+</CustomField>

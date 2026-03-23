@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>Close_Month</field>
+    </columns>
+    <columns>
+        <aggregateTypes>Average</aggregateTypes>
+        <field>Case.Severity_Number__c</field>
+    </columns>
+    <customDetailFormulas>
+        <calculatedFormula>CASE(
+MONTH(DATEVALUE(CLOSED_DATE)),
+1, "01 - January",
+2, "02 - February",
+3, "03 - March",
+4, "04 - April",
+5, "05 - May",
+6, "06 - June",
+7, "07 - July",
+8, "08 - August",
+9, "09 - September",
+10, "10 - October",
+11, "11 - November",
+12, "12 - December",
+"Not Closed"
+)</calculatedFormula>
+        <dataType>Text</dataType>
+        <developerName>Close_Month</developerName>
+        <label>Close Month</label>
+        <scale>0</scale>
+    </customDetailFormulas>
+    <description>This report is of case severity by month last year.</description>
+    <filter>
+        <criteriaItems>
+            <column>CLOSED</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>1</value>
+        </criteriaItems>
+    </filter>
+    <format>Summary</format>
+    <groupingsDown>
+        <field>Close_Month</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <groupingsDown>
+        <field>ACCOUNT.NAME</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>Case Severity By Month Last Year</name>
+    <params>
+        <name>units</name>
+        <value>h</value>
+    </params>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>CaseList</reportType>
+    <scope>organization</scope>
+    <showDetails>false</showDetails>
+    <showGrandTotal>true</showGrandTotal>
+    <showSubTotals>true</showSubTotals>
+    <timeFrameFilter>
+        <dateColumn>CLOSED_DATE</dateColumn>
+        <interval>INTERVAL_PREVFY</interval>
+    </timeFrameFilter>
+</Report>
