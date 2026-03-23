@@ -10,8 +10,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  validate:
-    name: Validate Project
+  format:
+    name: Format Check
     runs-on: ubuntu-latest
 
     steps:
@@ -25,7 +25,38 @@ jobs:
           cache: npm
 
       - name: Install dependencies
-        run: npm ci
+        run: npm install
 
       - name: Verify formatting
         run: npm run prettier:verify
+
+  validate:
+    name: Metadata Validation
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Validate core project files
+        shell: bash
+        run: |
+          test -f sfdx-project.json
+          test -f manifest/package.xml
+          test -f force-app/main/default/objects/Lead/fields/Lead_Score.field-meta.xml
+          test -f force-app/main/default/objects/Lead/fields/Lead_Rating.field-meta.xml
+          test -f force-app/main/default/objects/Asset/fields/Opportunity_Value.field-meta.xml
+          test -f force-app/main/default/objects/Case/fields/Severity_Number.field-meta.xml
+          test -f force-app/main/default/permissionsets/Sales_Representative.permissionset-meta.xml
+          test -f force-app/main/default/permissionsets/Service_Agent.permissionset-meta.xml
+          test -f force-app/main/default/reports/ComplianceReports/Case_Severity_By_Month_Last_Year_ReM.report-meta.xml
+
+      - name: Validate metadata contents
+        shell: bash
+        run: |
+          grep -q "Lead_Score__c" force-app/main/default/objects/Lead/fields/Lead_Score.field-meta.xml
+          grep -q "Lead_Rating__c" force-app/main/default/objects/Lead/fields/Lead_Rating.field-meta.xml
+          grep -q "Opportunity_Value__c" force-app/main/default/objects/Asset/fields/Opportunity_Value.field-meta.xml
+          grep -q "Severity_Number__c" force-app/main/default/objects/Case/fields/Severity_Number.field-meta.xml
+          grep -q "Close Month" force-app/main/default/reports/ComplianceReports/Case_Severity_By_Month_Last_Year_ReM.report-meta.xml
+          grep -q "Case Severity By Month Last Year" force-app/main/default/reports/ComplianceReports/Case_Severity_By_Month_Last_Year_ReM.report-meta.xml

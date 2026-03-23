@@ -24,7 +24,7 @@ Projeto criado para documentar a implementação do **Superbadge: Formulas** no 
 
 ## Status do CI
 
-O projeto conta com uma pipeline no GitHub Actions para validar a instalação das dependências e verificar a formatação dos arquivos. O indicador acima mostra automaticamente se a execução mais recente da esteira passou ou falhou.
+O projeto conta com uma pipeline no GitHub Actions para validar a instalação das dependências, verificar a formatação dos arquivos e conferir a presença dos principais metadados do superbadge. O indicador acima mostra automaticamente se a execução mais recente da esteira passou ou falhou.
 
 ## Destaques
 
@@ -147,6 +147,7 @@ force-app/main/default/
 - Permission Sets
 - Formula Fields
 - Report metadata
+- GitHub Actions
 
 ## Como usar
 
