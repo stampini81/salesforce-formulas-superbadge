@@ -38,18 +38,17 @@ jobs:
           echo "Available npm scripts:"
           node -e "const pkg=require('./package.json'); console.log(pkg.scripts)"
 
-      - name: Clean npm cache
-        shell: bash
-        run: |
-          set -euxo pipefail
-          npm cache clean --force
-
       - name: Install dependencies
         shell: bash
         run: |
           set -euxo pipefail
-          echo "Installing dependencies with retry support..."
-          npm ci --legacy-peer-deps --omit=optional --loglevel verbose || (sleep 10 && npm ci --legacy-peer-deps --omit=optional --loglevel verbose)
+          npm config set fund false
+          npm config set audit false
+          for i in 1 2 3; do
+            npm ci --legacy-peer-deps --omit=optional && break
+            echo "npm ci failed (attempt $i). Retrying in 10s..."
+            sleep 10
+          done
 
       - name: Verify formatting
         shell: bash
@@ -100,18 +99,17 @@ jobs:
           echo "Available npm scripts:"
           node -e "const pkg=require('./package.json'); console.log(pkg.scripts)"
 
-      - name: Clean npm cache
-        shell: bash
-        run: |
-          set -euxo pipefail
-          npm cache clean --force
-
       - name: Install dependencies
         shell: bash
         run: |
           set -euxo pipefail
-          echo "Installing dependencies for test execution with retry support..."
-          npm ci --legacy-peer-deps --omit=optional --loglevel verbose || (sleep 10 && npm ci --legacy-peer-deps --omit=optional --loglevel verbose)
+          npm config set fund false
+          npm config set audit false
+          for i in 1 2 3; do
+            npm ci --legacy-peer-deps --omit=optional && break
+            echo "npm ci failed (attempt $i). Retrying in 10s..."
+            sleep 10
+          done
 
       - name: Detect Jest test files
         id: detect_tests
