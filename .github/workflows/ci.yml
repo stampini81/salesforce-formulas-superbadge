@@ -57,6 +57,74 @@ jobs:
           echo "Package scripts:"
           cat package.json
 
+  test:
+    name: Test Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: npm
+
+      - name: Show environment details
+        shell: bash
+        run: |
+          set -euxo pipefail
+          echo "Node version:"
+          node --version
+          echo "NPM version:"
+          npm --version
+
+      - name: Install dependencies
+        shell: bash
+        run: |
+          set -euxo pipefail
+          echo "Installing dependencies for test execution..."
+          npm ci --legacy-peer-deps
+
+      - name: Detect Jest test files
+        id: detect_tests
+        shell: bash
+        run: |
+          set -euxo pipefail
+          if find force-app -type f \( -name "*.test.js" -o -name "*.spec.js" \) | grep -q .; then
+            echo "has_tests=true" >> "$GITHUB_OUTPUT"
+            echo "Detected test files:"
+            find force-app -type f \( -name "*.test.js" -o -name "*.spec.js" \) | sort
+          else
+            echo "has_tests=false" >> "$GITHUB_OUTPUT"
+            echo "No Jest/LWC test files were found under force-app."
+          fi
+
+      - name: Run Jest tests
+        if: steps.detect_tests.outputs.has_tests == 'true'
+        shell: bash
+        run: |
+          set -euxo pipefail
+          echo "Running Jest tests with CI reporters..."
+          npm run test -- --ci
+
+      - name: Skip test execution
+        if: steps.detect_tests.outputs.has_tests != 'true'
+        shell: bash
+        run: |
+          echo "Test step skipped because the repository currently has no Jest test files."
+
+      - name: Debug test failure
+        if: failure()
+        shell: bash
+        run: |
+          echo "Test job failed. Displaying repository state for debugging."
+          pwd
+          ls -la
+          echo "Detected test files:"
+          find force-app -type f \( -name "*.test.js" -o -name "*.spec.js" \) | sort || true
+
   validate:
     name: Metadata Validation
     runs-on: ubuntu-latest
