@@ -47,12 +47,21 @@ jobs:
           echo ".prettierrc"
           cat .prettierrc
 
+      - name: Clean npm cache
+        shell: bash
+        run: |
+          set -euxo pipefail
+          npm cache clean --force
+
       - name: Install dependencies
         shell: bash
         run: |
           set -euxo pipefail
           npm config set fund false
           npm config set audit false
+          npm config set fetch-retries 5
+          npm config set fetch-retry-mintimeout 20000
+          npm config set fetch-retry-maxtimeout 120000
           for i in 1 2 3; do
             npm ci --legacy-peer-deps --omit=optional && break
             echo "npm ci failed (attempt $i). Retrying in 10s..."
@@ -112,12 +121,21 @@ jobs:
           echo "Available npm scripts:"
           node -e "const pkg=require('./package.json'); console.log(pkg.scripts)"
 
+      - name: Clean npm cache
+        shell: bash
+        run: |
+          set -euxo pipefail
+          npm cache clean --force
+
       - name: Install dependencies
         shell: bash
         run: |
           set -euxo pipefail
           npm config set fund false
           npm config set audit false
+          npm config set fetch-retries 5
+          npm config set fetch-retry-mintimeout 20000
+          npm config set fetch-retry-maxtimeout 120000
           for i in 1 2 3; do
             npm ci --legacy-peer-deps --omit=optional && break
             echo "npm ci failed (attempt $i). Retrying in 10s..."
