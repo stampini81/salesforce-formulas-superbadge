@@ -24,11 +24,38 @@ jobs:
           node-version: 18
           cache: npm
 
+      - name: Show environment details
+        shell: bash
+        run: |
+          set -euxo pipefail
+          echo "Node version:"
+          node --version
+          echo "NPM version:"
+          npm --version
+
       - name: Install dependencies
-        run: npm ci --legacy-peer-deps
+        shell: bash
+        run: |
+          set -euxo pipefail
+          echo "Installing dependencies with legacy peer deps enabled..."
+          npm ci --legacy-peer-deps
 
       - name: Verify formatting
-        run: npm run prettier:verify
+        shell: bash
+        run: |
+          set -euxo pipefail
+          echo "Running Prettier verification..."
+          npm run prettier:verify
+
+      - name: Debug format failure
+        if: failure()
+        shell: bash
+        run: |
+          echo "Format job failed. Displaying repository and package details for debugging."
+          pwd
+          ls -la
+          echo "Package scripts:"
+          cat package.json
 
   validate:
     name: Metadata Validation
@@ -41,22 +68,45 @@ jobs:
       - name: Validate core project files
         shell: bash
         run: |
-          test -f sfdx-project.json
-          test -f manifest/package.xml
-          test -f force-app/main/default/objects/Lead/fields/Lead_Score.field-meta.xml
-          test -f force-app/main/default/objects/Lead/fields/Lead_Rating.field-meta.xml
-          test -f force-app/main/default/objects/Asset/fields/Opportunity_Value.field-meta.xml
-          test -f force-app/main/default/objects/Case/fields/Severity_Number.field-meta.xml
-          test -f force-app/main/default/permissionsets/Sales_Representative.permissionset-meta.xml
-          test -f force-app/main/default/permissionsets/Service_Agent.permissionset-meta.xml
-          test -f force-app/main/default/reports/ComplianceReports/Case_Severity_By_Month_Last_Year_ReM.report-meta.xml
+          set -euxo pipefail
+          required_files=(
+            "sfdx-project.json"
+            "manifest/package.xml"
+            "force-app/main/default/objects/Lead/fields/Lead_Score.field-meta.xml"
+            "force-app/main/default/objects/Lead/fields/Lead_Rating.field-meta.xml"
+            "force-app/main/default/objects/Asset/fields/Opportunity_Value.field-meta.xml"
+            "force-app/main/default/objects/Case/fields/Severity_Number.field-meta.xml"
+            "force-app/main/default/permissionsets/Sales_Representative.permissionset-meta.xml"
+            "force-app/main/default/permissionsets/Service_Agent.permissionset-meta.xml"
+            "force-app/main/default/reports/ComplianceReports/Case_Severity_By_Month_Last_Year_ReM.report-meta.xml"
+          )
+
+          for file in "${required_files[@]}"; do
+            echo "Checking file: $file"
+            test -f "$file"
+          done
 
       - name: Validate metadata contents
         shell: bash
         run: |
-          grep -q "Lead_Score__c" force-app/main/default/objects/Lead/fields/Lead_Score.field-meta.xml
-          grep -q "Lead_Rating__c" force-app/main/default/objects/Lead/fields/Lead_Rating.field-meta.xml
-          grep -q "Opportunity_Value__c" force-app/main/default/objects/Asset/fields/Opportunity_Value.field-meta.xml
-          grep -q "Severity_Number__c" force-app/main/default/objects/Case/fields/Severity_Number.field-meta.xml
-          grep -q "Close Month" force-app/main/default/reports/ComplianceReports/Case_Severity_By_Month_Last_Year_ReM.report-meta.xml
-          grep -q "Case Severity By Month Last Year" force-app/main/default/reports/ComplianceReports/Case_Severity_By_Month_Last_Year_ReM.report-meta.xml
+          set -euxo pipefail
+          echo "Validating Lead Score metadata..."
+          grep -n "Lead_Score__c" force-app/main/default/objects/Lead/fields/Lead_Score.field-meta.xml
+          echo "Validating Lead Rating metadata..."
+          grep -n "Lead_Rating__c" force-app/main/default/objects/Lead/fields/Lead_Rating.field-meta.xml
+          echo "Validating Opportunity Value metadata..."
+          grep -n "Opportunity_Value__c" force-app/main/default/objects/Asset/fields/Opportunity_Value.field-meta.xml
+          echo "Validating Severity Number metadata..."
+          grep -n "Severity_Number__c" force-app/main/default/objects/Case/fields/Severity_Number.field-meta.xml
+          echo "Validating report metadata..."
+          grep -n "Close Month" force-app/main/default/reports/ComplianceReports/Case_Severity_By_Month_Last_Year_ReM.report-meta.xml
+          grep -n "Case Severity By Month Last Year" force-app/main/default/reports/ComplianceReports/Case_Severity_By_Month_Last_Year_ReM.report-meta.xml
+
+      - name: Debug metadata failure
+        if: failure()
+        shell: bash
+        run: |
+          echo "Metadata validation failed. Displaying key directories for debugging."
+          pwd
+          ls -la
+          find force-app -maxdepth 6 -type f | sort
