@@ -7,6 +7,10 @@
 </p>
 
 <p align="center">
+  <a href="https://github.com/stampini81/salesforce-formulas-superbadge/actions/workflows/ci.yml">
+    <img src="https://github.com/stampini81/salesforce-formulas-superbadge/actions/workflows/ci.yml/badge.svg" alt="CI status" />
+  </a>
+  <br />
   <img src="https://img.shields.io/badge/Salesforce-Superbadge-00A1E0?style=for-the-badge" alt="Salesforce Superbadge" />
   <img src="https://img.shields.io/badge/Metadata-Salesforce%20DX-0176D3?style=for-the-badge" alt="Salesforce DX" />
   <img src="https://img.shields.io/badge/Focus-Formulas%20%26%20Reports-5E5E5E?style=for-the-badge" alt="Formulas and Reports" />
@@ -17,6 +21,10 @@ Projeto criado para documentar a implementação do **Superbadge: Formulas** no 
 ## Autor
 
 **Leandro da Silva Stampini**
+
+## Status do CI
+
+O projeto conta com uma pipeline no GitHub Actions para validar a instalação das dependências e verificar a formatação dos arquivos. O indicador acima mostra automaticamente se a execução mais recente da esteira passou ou falhou.
 
 ## Destaques
 
