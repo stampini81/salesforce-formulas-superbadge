@@ -24,7 +24,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
           cache: npm
 
       - name: Show environment details
@@ -38,12 +38,18 @@ jobs:
           echo "Available npm scripts:"
           node -e "const pkg=require('./package.json'); console.log(pkg.scripts)"
 
+      - name: Clean npm cache
+        shell: bash
+        run: |
+          set -euxo pipefail
+          npm cache clean --force
+
       - name: Install dependencies
         shell: bash
         run: |
           set -euxo pipefail
-          echo "Installing dependencies with legacy peer deps enabled..."
-          npm ci --legacy-peer-deps --loglevel verbose
+          echo "Installing dependencies with legacy peer deps enabled and optional dependencies omitted..."
+          npm ci --legacy-peer-deps --omit=optional --loglevel verbose
 
       - name: Verify formatting
         shell: bash
@@ -80,7 +86,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
           cache: npm
 
       - name: Show environment details
@@ -94,12 +100,18 @@ jobs:
           echo "Available npm scripts:"
           node -e "const pkg=require('./package.json'); console.log(pkg.scripts)"
 
+      - name: Clean npm cache
+        shell: bash
+        run: |
+          set -euxo pipefail
+          npm cache clean --force
+
       - name: Install dependencies
         shell: bash
         run: |
           set -euxo pipefail
-          echo "Installing dependencies for test execution..."
-          npm ci --legacy-peer-deps --loglevel verbose
+          echo "Installing dependencies for test execution with optional dependencies omitted..."
+          npm ci --legacy-peer-deps --omit=optional --loglevel verbose
 
       - name: Detect Jest test files
         id: detect_tests
