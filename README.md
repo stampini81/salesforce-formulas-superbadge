@@ -46,12 +46,12 @@ Este repositório reúne a estrutura do projeto Salesforce DX e os metadados uti
 
 ## O que foi implementado
 
-| Área | Implementação |
-| --- | --- |
-| Lead | `Lead_Score__c` e `Lead_Rating__c` |
-| Asset | `Opportunity_Value__c` no layout do ativo |
-| Case | `Severity_Number__c` para cálculos e média |
-| Segurança | visibilidade por `Sales_Representative` e `Service_Agent` |
+| Área       | Implementação                                                    |
+| ---------- | ---------------------------------------------------------------- |
+| Lead       | `Lead_Score__c` e `Lead_Rating__c`                               |
+| Asset      | `Opportunity_Value__c` no layout do ativo                        |
+| Case       | `Severity_Number__c` para cálculos e média                       |
+| Segurança  | visibilidade por `Sales_Representative` e `Service_Agent`        |
 | Relatórios | atualização do relatório com `Close Month` e média de severidade |
 
 ### Lead

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <Report xmlns="http://soap.sforce.com/2006/04/metadata">
     <columns>
         <field>Close_Month</field>
@@ -29,7 +29,8 @@ MONTH(DATEVALUE(CLOSED_DATE)),
         <label>Close Month</label>
         <scale>0</scale>
     </customDetailFormulas>
-    <description>This report is of case severity by month last year.</description>
+    <description
+  >This report is of case severity by month last year.</description>
     <filter>
         <criteriaItems>
             <column>CLOSED</column>

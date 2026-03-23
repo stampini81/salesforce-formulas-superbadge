@@ -1,6 +1,7 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
-    <description>Displays a star rating image based on the lead score to help prioritize leads visually.</description>
+    <description
+  >Displays a star rating image based on the lead score to help prioritize leads visually.</description>
     <externalId>false</externalId>
     <fullName>Lead_Rating__c</fullName>
     <formula>IF(
@@ -24,7 +25,8 @@
         )
     )
 )</formula>
-    <inlineHelpText>Displays the lead score as a star rating with alternate text for accessibility.</inlineHelpText>
+    <inlineHelpText
+  >Displays the lead score as a star rating with alternate text for accessibility.</inlineHelpText>
     <label>Lead Rating</label>
     <required>false</required>
     <trackFeedHistory>false</trackFeedHistory>

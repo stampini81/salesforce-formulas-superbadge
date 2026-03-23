@@ -1,6 +1,7 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
-    <description>Converts the case severity picklist value into a reusable numeric value for reporting and calculations.</description>
+    <description
+  >Converts the case severity picklist value into a reusable numeric value for reporting and calculations.</description>
     <externalId>false</externalId>
     <fullName>Severity_Number__c</fullName>
     <formula>IF(
@@ -9,7 +10,8 @@
     VALUE(TEXT(Severity__c))
 )</formula>
     <formulaTreatBlanksAs>BlankAsBlank</formulaTreatBlanksAs>
-    <inlineHelpText>Shows the case severity as a number so it can be summarized and averaged in reports.</inlineHelpText>
+    <inlineHelpText
+  >Shows the case severity as a number so it can be summarized and averaged in reports.</inlineHelpText>
     <label>Severity (Number)</label>
     <precision>18</precision>
     <required>false</required>
